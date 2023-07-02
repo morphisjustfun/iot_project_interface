@@ -2,6 +2,7 @@ import {Container, Grid, Input, Text, Spacer, Button, useInput} from "@nextui-or
 import {useState} from "react";
 import LoadingModal from "@/components/loading_modal";
 import TextModal from "@/components/text_modal";
+import {useRouter} from "next/navigation";
 
 const auth = async (email: string, password: string) => {
     const user = {
@@ -18,6 +19,7 @@ const auth = async (email: string, password: string) => {
             },
             body: JSON.stringify(user)
         });
+        console.log(res);
         return res.ok;
     } catch (e) {
         return false;
@@ -30,6 +32,7 @@ const LoginForm = () => {
 
     const [loadingVisible, setLoadingVisible] = useState(false);
     const [loadingErrorLogin, setLoadingErrorLogin] = useState(false);
+    const router = useRouter();
 
     return (
         <>
@@ -48,6 +51,7 @@ const LoginForm = () => {
                 const success = await auth(email, password);
                 setLoadingVisible(false);
                 if (success) {
+                    router.push("/dashboard");
                     return;
                 }
                 setLoadingErrorLogin(true);
