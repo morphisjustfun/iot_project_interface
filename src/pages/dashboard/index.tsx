@@ -1,6 +1,6 @@
 import {Container, Grid, Input, Text, Spacer, Button, useInput} from "@nextui-org/react";
 import {useState, useRef} from "react";
-import type { MqttClient } from 'mqtt'
+import type {MqttClient} from 'mqtt'
 import useMqtt from "@/hooks/use_mqtt";
 
 export default function Dashboard() {
@@ -20,13 +20,13 @@ export default function Dashboard() {
     const mqttClientRef = useRef<MqttClient | null>(null)
     const setMqttClient =
         (client: MqttClient) => {
-        mqttClientRef.current = client
-    }
+            mqttClientRef.current = client
+        }
 
     useMqtt({
-        uri: 'mqtt://test.mosquitto.org',
+        uri: 'wss://mqtt.eclipseprojects.io/mqtt',
         options: {
-            port: 1883,
+            port: 443,
             // ignore invalid SSL certificates
         },
         topicHandlers: incommingMessageHandler.current,
@@ -35,7 +35,8 @@ export default function Dashboard() {
 
     return (
         <Container fluid display="flex" css={{
-            height: "100%"
+            height:
+                "100%"
         }}>
             <Grid.Container direction="row" alignItems="center">
                 <Grid.Container xs={6}>
