@@ -150,9 +150,9 @@ export default function Plots(props: PlotsProp) {
             },
         },
         scales: {
-            y: {
-                min: -0.1
-            }
+            // y: {
+            //     min: -0.1
+            // }
         },
     }
 
@@ -214,7 +214,7 @@ export default function Plots(props: PlotsProp) {
 }
 
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
     const prisma = new PrismaClient();
     const data = await prisma.data.findMany({
         select: {
