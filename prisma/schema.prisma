@@ -16,3 +16,14 @@ model User {
   mail     String @unique
   password String
 }
+
+model Data {
+  id       String @id @default(uuid())
+  runId    String
+  topic    String
+  endoAvg  Float
+  endoSd   Float
+  heartAvg Float
+  heartSd  Float
+  time     BigInt
+}

@@ -1,45 +1,40 @@
 import type {MqttClient, IClientOptions} from 'mqtt'
 import mqtt from 'mqtt';
-import {useEffect, useRef} from 'react'
+import {DependencyList, useEffect, useRef} from 'react'
 
 interface useMqttProps {
     uri: string
     options?: IClientOptions
-    topicHandlers?: { topic: string; handler: (payload: any) => void }[]
-    onConnectedHandler?: (client: MqttClient) => void
+    topicHandlers: { topic: string; handler: (payload: any) => void }[]
+    onConnectedHandler: (client: MqttClient) => void,
+    onErrorHandler: (error: any) => void
 }
 
-function useMqtt({
-                     uri,
-                     options = {},
-                     topicHandlers = [{
-                         topic: '', handler: ({topic, payload, packet}) => {
-                         }
-                     }],
-                     onConnectedHandler = (client) => {
-                     },
-                 }: useMqttProps) {
-    const clientRef = useRef<MqttClient | null>(null)
+function useMqtt(props: useMqttProps, deps: DependencyList = []) {
+    const options = props.options === undefined ? {} : props.options;
 
+
+    const clientRef = useRef<MqttClient | null>(null)
     useEffect(() => {
         if (clientRef.current) return
-        if (!topicHandlers || topicHandlers.length === 0) return () => {
+        if (!props.topicHandlers || props.topicHandlers.length === 0) return () => {
         }
 
         try {
             clientRef.current = options
-                ? mqtt.connect(uri, options)
-                : mqtt.connect(uri)
+                ? mqtt.connect(props.uri, options)
+                : mqtt.connect(props.uri)
         } catch (error) {
             console.error('error', error)
         }
 
         const client = clientRef.current
-        topicHandlers.forEach((th) => {
+        props.topicHandlers.forEach((th) => {
             client?.subscribe(th.topic)
         })
+
         client?.on('message', (topic: string, rawPayload: any, packet: any) => {
-            const th = topicHandlers.find((t) => t.topic === topic)
+            const th = props.topicHandlers.find((t) => t.topic === topic)
             let payload
             try {
                 payload = JSON.parse(rawPayload)
@@ -50,19 +45,23 @@ function useMqtt({
         })
 
         client?.on('connect', () => {
-            if (onConnectedHandler) onConnectedHandler(client)
+            props.onConnectedHandler(client);
         })
+
+        client?.on('error', (error) => {
+            props.onErrorHandler(error);
+        });
 
         return () => {
             if (client) {
-                topicHandlers.forEach((th) => {
+                props.topicHandlers.forEach((th) => {
                     client.unsubscribe(th.topic)
                 })
                 client.end()
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, deps);
 }
 
 export default useMqtt;
