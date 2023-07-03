@@ -90,7 +90,7 @@ export default function Plots(props: PlotsProp) {
                 borderColor: 'rgba(47, 97, 68, 1)',
                 pointStyle: 'circle',
                 pointRadius: data?.map((value) => {
-                    return 20 * (1 - value.endoSd / value.endoAvg)
+                    return 20 * (value.endoSd / value.endoAvg)
                 }),
                 showLine: true,
             }
@@ -110,7 +110,7 @@ export default function Plots(props: PlotsProp) {
                 borderColor: 'rgba(47, 97, 68, 1)',
                 pointStyle: 'circle',
                 pointRadius: data?.map((value) => {
-                    return 20 * (1 - value.heartSd / value.heartAvg)
+                    return 20 * (value.heartSd / value.heartAvg)
                 }),
                 showLine: true,
             }

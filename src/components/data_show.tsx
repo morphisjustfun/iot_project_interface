@@ -7,7 +7,7 @@ import {
     LineElement,
     PointElement, RadialLinearScale, Title, Tooltip
 } from "chart.js";
-import {Button, Container, Divider, Spacer} from "@nextui-org/react";
+import {Button, Container, Divider, Spacer, Text, Grid} from "@nextui-org/react";
 import {Scatter} from "react-chartjs-2";
 import zoomPlugin from "chartjs-plugin-zoom";
 import {useRef} from "react";
@@ -42,18 +42,20 @@ const DataShow = (props: { data1: Data[], data2: Data[], options: ChartOptions<C
 
     return (<><Divider y={5}/>
         <Container>
-            <Container justify="flex-end" alignItems="center" display="flex">
+            <Grid.Container justify="space-between">
+                <Text h4> Actividad cardiaca </Text>
                 <Button auto onPress={handleResetZoom1} color="gradient">Reset</Button>
-            </Container>
+            </Grid.Container>
             <Spacer y={1}/>
             {/*// @ts-ignore*/}
             <Scatter data={props.data1} options={props.options} height={props.height} ref={chartRef1}/>
         </Container>
         <Divider y={5}/>
         <Container>
-            <Container justify="flex-end" alignItems="center" display="flex">
+            <Grid.Container justify="space-between">
+                <Text h4> Actividad electrodérmica </Text>
                 <Button auto onPress={handleResetZoom2} color="gradient">Reset</Button>
-            </Container>
+            </Grid.Container>
             <Spacer y={1}/>
             {/*// @ts-ignore*/}
             <Scatter data={props.data2} options={props.options} height={props.height} ref={chartRef2}/>
