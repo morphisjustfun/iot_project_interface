@@ -22,7 +22,13 @@ interface Data {
     heartSd: number;
 }
 
-const DataShow = (props: { data1: Data[], data2: Data[], options: ChartOptions<ChartType>, height: number }) => {
+const DataShow = (props: {
+    data1: Data[],
+    data2: Data[],
+    options1: ChartOptions<ChartType>,
+    options2: ChartOptions<ChartType>,
+    height: number
+}) => {
     const chartRef1 = useRef(null);
     const chartRef2 = useRef(null);
 
@@ -43,22 +49,22 @@ const DataShow = (props: { data1: Data[], data2: Data[], options: ChartOptions<C
     return (<><Divider y={5}/>
         <Container>
             <Grid.Container justify="space-between">
-                <Text h4> Actividad cardiaca </Text>
+                <Text h4> Cardiac activity </Text>
                 <Button auto onPress={handleResetZoom1} color="gradient">Reset</Button>
             </Grid.Container>
             <Spacer y={1}/>
             {/*// @ts-ignore*/}
-            <Scatter data={props.data1} options={props.options} height={props.height} ref={chartRef1}/>
+            <Scatter data={props.data1} options={props.options1} height={props.height} ref={chartRef1}/>
         </Container>
         <Divider y={5}/>
         <Container>
             <Grid.Container justify="space-between">
-                <Text h4> Actividad electrodérmica </Text>
+                <Text h4> Electrodermal activity </Text>
                 <Button auto onPress={handleResetZoom2} color="gradient">Reset</Button>
             </Grid.Container>
             <Spacer y={1}/>
             {/*// @ts-ignore*/}
-            <Scatter data={props.data2} options={props.options} height={props.height} ref={chartRef2}/>
+            <Scatter data={props.data2} options={props.options2} height={props.height} ref={chartRef2}/>
         </Container></>)
 }
 

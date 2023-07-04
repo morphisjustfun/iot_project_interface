@@ -84,7 +84,7 @@ export default function Dashboard() {
                             <Container>
                                 <Text h3 css={{
                                     textAlign: "center"
-                                }}> No ha seleccionado un tópico </Text>
+                                }}> You have not selected a topic </Text>
                             </Container>
                     }
                 </Grid.Container>

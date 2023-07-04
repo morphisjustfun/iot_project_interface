@@ -32,6 +32,7 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 
 import DataShow from "@/components/data_show";
 import {useQuery} from "react-query";
+import TextModal from "@/components/text_modal";
 
 interface PlotsProp {
     runIds: String[]
@@ -50,6 +51,7 @@ export default function Plots(props: PlotsProp) {
     const [selectedRunId, setSelectedRunId] = useState<String | undefined>(undefined);
     const [loadingVisible, setLoadingVisible] = useState(false);
     const [pauseAutoRefetch, setPauseAutoRefetch] = useState(false);
+    const [showInfoDialog, setShowInfoDialog] = useState(false);
 
     // const [data, setData] = useState<Data[] | undefined>(undefined);
     const {isLoading, isSuccess, error, status, data, isRefetching} = useQuery(
@@ -117,7 +119,8 @@ export default function Plots(props: PlotsProp) {
         ]
     };
 
-    const options: ChartOptions<ChartType> = {
+
+    const options1: ChartOptions<ChartType> = {
         responsive: true,
         plugins: {
             legend: {
@@ -150,9 +153,78 @@ export default function Plots(props: PlotsProp) {
             },
         },
         scales: {
-            // y: {
-            //     min: -0.1
-            // }
+            x: {
+                title: {
+                    display: true,
+                    text: 'Time (ms)',
+                    font: {
+                        size: 18,
+                    }
+                }
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: 'Heart Value',
+                    font: {
+                        size: 18,
+                    }
+                }
+            },
+        },
+    }
+
+    const options2: ChartOptions<ChartType> = {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false
+            },
+            zoom: {
+                pan: {
+                    enabled: true,
+                    mode: 'x',
+                },
+                zoom: {
+                    pinch: {
+                        enabled: true
+                    },
+                    wheel: {
+                        enabled: true
+                    },
+                    mode: 'x',
+                }
+            }
+        },
+        elements: {
+            line: {
+                tension: 0,
+                borderWidth: 4,
+                borderColor: 'rgba(47, 97, 68, 1)',
+            },
+            point: {
+                hitRadius: 30
+            },
+        },
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Time (ms)',
+                    font: {
+                        size: 18,
+                    }
+                }
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: 'Endo Value',
+                    font: {
+                        size: 18,
+                    }
+                }
+            },
         },
     }
 
@@ -165,13 +237,22 @@ export default function Plots(props: PlotsProp) {
         }}>
             <LoadingModal visible={isLoading} title="Retrieving data"/>
             <LoadingModal visible={isLoading || isRefetching} title="Retrieving data"/> :
+            <TextModal visible={showInfoDialog} setVisible={setShowInfoDialog} title="Details"
+                       message={[
+                           "(1) Identify the interval of interest (e.g., a scene of tension or realiation)",
+                           "(2) Zoom or scroll internally in the chart",
+                           "(3) Check if there is a change in the interval in relation to the neighboring points. In addition to the change in value, you can identify variations in the radius of the circles, which represent the dispersion",
+                           "* Note that the values shown are approximations of every 32 seconds",
+                           "* Heart Value: A value equivalent to BPM",
+                           "* Endo Value: The voltage resulting from using human skin as a resistor"
+                       ]} width={500}/>
             <Grid.Container direction="column" justify="center" alignItems="center">
                 <Spacer y={3}/>
-                <Text h1> Visualización de datos </Text>
+                <Text h1> Data visualization </Text>
                 <Spacer y={1}/>
                 <Dropdown>
                     <Dropdown.Button
-                        flat> {selectedRunId !== undefined ? selectedRunId : 'Seleccionar'} </Dropdown.Button>
+                        flat> {selectedRunId !== undefined ? selectedRunId : 'Select'} </Dropdown.Button>
                     <Dropdown.Menu>
                         {
                             props.runIds.map((runId, index) => {
@@ -192,6 +273,8 @@ export default function Plots(props: PlotsProp) {
                     </Dropdown.Menu>
                 </Dropdown>
                 <Spacer y={1}/>
+                <Button auto onPress={() => setShowInfoDialog(true)} color="gradient"> What is this about? </Button>
+                <Spacer y={1}/>
                 <Container justify="center" alignItems="center" display="flex">
                     <Text> Pause auto refetch </Text>
                     <Spacer y={1}/>
@@ -204,7 +287,8 @@ export default function Plots(props: PlotsProp) {
                         data !== undefined ? <>
                             {/*<DataShow data1={dataset1} data2={dataset2} options={options} height={50} />*/}
                             {/* @ts-ignore */}
-                            <MyChart data1={dataset1} data2={dataset2} options={options} height={50}/>
+                            <MyChart data1={dataset1} data2={dataset2} options1={options1} options2={options2}
+                                     height={50}/>
                         </> : <></>
                 }
                 <Spacer y={3}/>
