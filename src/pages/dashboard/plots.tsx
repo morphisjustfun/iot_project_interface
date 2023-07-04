@@ -70,7 +70,7 @@ export default function Plots(props: PlotsProp) {
             return data.data;
         },
         {
-            refetchInterval: 7000,
+            refetchInterval: 8000,
             refetchIntervalInBackground: true,
             refetchOnWindowFocus: true,
             refetchOnReconnect: true,
